@@ -1,0 +1,180 @@
+package templates
+
+import (
+	"strconv"
+
+	"todo-goat/internal/domain"
+)
+
+templ Index(todos []domain.Todo) {
+<!DOCTYPE html>
+<html lang="id" x-data>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>🐐 GOAT Todo</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.6/dist/cdn.min.js"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		[x-cloak] { display: none !important; }
+		* { font-family: 'Space Mono', monospace; }
+	</style>
+</head>
+
+<body class="min-h-screen bg-white">
+	<div class="max-w-lg mx-auto py-12 px-4">
+		<!-- Header -->
+		<div class="text-center mb-8">
+			<h1 class="text-4xl font-bold text-black mb-2">
+				🐐 GOAT Todo
+			</h1>
+			<p class="text-black/60 text-sm">Get things done, like a GOAT!</p>
+		</div>
+
+		<!-- Main Card -->
+		@TodoContainer(todos)
+
+		<!-- Footer -->
+		<p class="text-center text-black/40 text-sm mt-8">
+			GOAT Stack: Go + AlpineJS + Alpine AJAX + Templ + TailwindCSS
+		</p>
+	</div>
+</body>
+</html>
+}
+
+templ TodoContainer(todos []domain.Todo) {
+	<div id="todo-container" class="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+		<!-- Add Todo Form -->
+		<div class="p-4 sm:p-6 border-b-4 border-black" x-data="{ loading: false, error: false }">
+			<form 
+				x-init
+				x-target="todo-container"
+				@ajax:before="loading = true; error = false"
+				@ajax:success="$el.reset(); loading = false"
+				@ajax:error="loading = false; error = true"
+				method="POST"
+				action="/todos"
+				class="flex flex-col sm:flex-row gap-2 sm:gap-3"
+			>
+				<input
+					name="title"
+					type="text"
+					placeholder="Apa yang mau dikerjakan?"
+					class="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-white border-4 border-black text-black placeholder-black/40 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all text-sm sm:text-base"
+					:disabled="loading"
+					required
+				/>
+				<button
+					type="submit"
+					:disabled="loading"
+					:class="loading ? 'px-4 sm:px-6 py-2 sm:py-3 bg-black/50 text-white font-bold border-4 border-black cursor-wait text-sm sm:text-base' : 'px-4 sm:px-6 py-2 sm:py-3 bg-black text-white font-bold border-4 border-black hover:bg-white hover:text-black active:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 transition-all text-sm sm:text-base'"
+				>
+					<span x-show="!loading">TAMBAH</span>
+					<span x-show="loading" x-cloak>MENAMBAH...</span>
+				</button>
+			</form>
+			<!-- Error Message -->
+			<div 
+				x-show="error" 
+				x-cloak
+				x-transition
+				class="mt-2 p-2 bg-red-100 border-4 border-red-500 text-red-700 text-sm font-bold"
+			>
+				⚠️ Gagal menambahkan! Coba lagi.
+				<button @click="error = false" class="ml-2 underline">Tutup</button>
+			</div>
+		</div>
+
+		<!-- Todo List -->
+		<ul class="divide-y-4 divide-black">
+			if len(todos) == 0 {
+				<li class="p-8 text-center">
+					<div class="text-6xl mb-4">🎉</div>
+					<p class="text-black/60">Tidak ada todo! Tambahkan yang baru.</p>
+				</li>
+			}
+			for _, todo := range todos {
+				@TodoItem(todo)
+			}
+		</ul>
+
+		<!-- Footer Stats -->
+		if len(todos) > 0 {
+			<div class="p-4 bg-black text-white">
+				<p class="text-sm text-center font-bold">
+					{ strconv.Itoa(countDone(todos)) } / { strconv.Itoa(len(todos)) } SELESAI
+				</p>
+			</div>
+		}
+	</div>
+}
+
+templ TodoItem(todo domain.Todo) {
+	<li 
+		id={ "todo-" + strconv.Itoa(todo.ID) } 
+		x-data={ "{ done: " + strconv.FormatBool(todo.Done) + ", deleting: false }" }
+		x-show="!deleting"
+		x-transition:leave="transition ease-in duration-150"
+		x-transition:leave-start="opacity-100"
+		x-transition:leave-end="opacity-0"
+		class="group flex items-center gap-2 sm:gap-4 p-3 sm:p-4 hover:bg-black/5 transition-colors"
+	>
+		<!-- Toggle Checkbox -->
+		<form 
+			x-init
+			x-target="todo-container"
+			method="POST" 
+			action={ "/todos/" + strconv.Itoa(todo.ID) + "/toggle" }
+			class="shrink-0"
+			@submit="done = !done"
+			@ajax:error="done = !done"
+		>
+			<button
+				type="submit"
+				:class="done ? 'w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center border-4 border-black bg-black text-white font-bold transition-all hover:scale-110 text-xs sm:text-sm' : 'w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center border-4 border-black bg-white transition-all hover:scale-110'"
+			>
+				<span x-show="done">✓</span>
+			</button>
+		</form>
+
+		<!-- Title -->
+		<span
+			:class="done ? 'flex-1 text-sm sm:text-lg transition-all line-through text-black/40 break-words min-w-0' : 'flex-1 text-sm sm:text-lg transition-all text-black font-bold break-words min-w-0'"
+		>
+			{ todo.Title }
+		</span>
+
+		<!-- Delete Button -->
+		<form 
+			x-init
+			x-target="todo-container"
+			method="POST" 
+			action={ "/todos/" + strconv.Itoa(todo.ID) + "/delete" }
+			class="shrink-0"
+			@submit="deleting = true"
+			@ajax:error="deleting = false"
+		>
+			<button
+				type="submit"
+				class="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-2 sm:px-3 py-1 text-black font-bold border-4 border-black hover:bg-black hover:text-white transition-all text-xs sm:text-base"
+			>
+				✕
+			</button>
+		</form>
+	</li>
+}
+
+func countDone(todos []domain.Todo) int {
+	count := 0
+	for _, t := range todos {
+		if t.Done {
+			count++
+		}
+	}
+	return count
+}
