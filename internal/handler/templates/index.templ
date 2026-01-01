@@ -23,6 +23,37 @@ templ Index(todos []domain.Todo) {
 		[x-cloak] { display: none !important; }
 		* { font-family: 'Space Mono', monospace; }
 	</style>
+	<script>
+		// SSE for real-time updates
+		document.addEventListener('DOMContentLoaded', function() {
+			const eventSource = new EventSource('/events');
+			
+			eventSource.onmessage = function(event) {
+				if (event.data === 'update') {
+					// Fetch updated todo container
+					fetch('/')
+						.then(response => response.text())
+						.then(html => {
+							const parser = new DOMParser();
+							const doc = parser.parseFromString(html, 'text/html');
+							const newContainer = doc.getElementById('todo-container');
+							const oldContainer = document.getElementById('todo-container');
+							if (newContainer && oldContainer) {
+								oldContainer.innerHTML = newContainer.innerHTML;
+								// Re-init Alpine on new content
+								if (window.Alpine) {
+									window.Alpine.initTree(oldContainer);
+								}
+							}
+						});
+				}
+			};
+			
+			eventSource.onerror = function() {
+				console.log('SSE connection lost, reconnecting...');
+			};
+		});
+	</script>
 </head>
 
 <body class="min-h-screen bg-white">

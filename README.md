@@ -14,6 +14,8 @@ Aplikasi Todo List modern dengan arsitektur Clean Architecture, dengan techstack
 
 - Tambah, toggle, dan hapus todo
 - SPA-like experience tanpa page reload (Alpine AJAX)
+- Real-time sync antar browser (Server-Sent Events)
+- Optimistic UI
 - Hot reload untuk development
 - Clean Architecture untuk maintainability
 

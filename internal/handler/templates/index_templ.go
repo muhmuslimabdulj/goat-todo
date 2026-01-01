@@ -35,7 +35,7 @@ func Index(todos []domain.Todo) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"id\" x-data><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>🐐 GOAT Todo</title><script src=\"https://cdn.tailwindcss.com\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.6/dist/cdn.min.js\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap\" rel=\"stylesheet\"><style>\r\n\t\t[x-cloak] { display: none !important; }\r\n\t\t* { font-family: 'Space Mono', monospace; }\r\n\t</style></head><body class=\"min-h-screen bg-white\"><div class=\"max-w-lg mx-auto py-12 px-4\"><!-- Header --><div class=\"text-center mb-8\"><h1 class=\"text-4xl font-bold text-black mb-2\">🐐 GOAT Todo</h1><p class=\"text-black/60 text-sm\">Get things done, like a GOAT!</p></div><!-- Main Card -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><html lang=\"id\" x-data><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>🐐 GOAT Todo</title><script src=\"https://cdn.tailwindcss.com\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.12.6/dist/cdn.min.js\"></script><script defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js\"></script><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap\" rel=\"stylesheet\"><style>\r\n\t\t[x-cloak] { display: none !important; }\r\n\t\t* { font-family: 'Space Mono', monospace; }\r\n\t</style><script>\r\n\t\t// SSE for real-time updates\r\n\t\tdocument.addEventListener('DOMContentLoaded', function() {\r\n\t\t\tconst eventSource = new EventSource('/events');\r\n\t\t\t\r\n\t\t\teventSource.onmessage = function(event) {\r\n\t\t\t\tif (event.data === 'update') {\r\n\t\t\t\t\t// Fetch updated todo container\r\n\t\t\t\t\tfetch('/')\r\n\t\t\t\t\t\t.then(response => response.text())\r\n\t\t\t\t\t\t.then(html => {\r\n\t\t\t\t\t\t\tconst parser = new DOMParser();\r\n\t\t\t\t\t\t\tconst doc = parser.parseFromString(html, 'text/html');\r\n\t\t\t\t\t\t\tconst newContainer = doc.getElementById('todo-container');\r\n\t\t\t\t\t\t\tconst oldContainer = document.getElementById('todo-container');\r\n\t\t\t\t\t\t\tif (newContainer && oldContainer) {\r\n\t\t\t\t\t\t\t\toldContainer.innerHTML = newContainer.innerHTML;\r\n\t\t\t\t\t\t\t\t// Re-init Alpine on new content\r\n\t\t\t\t\t\t\t\tif (window.Alpine) {\r\n\t\t\t\t\t\t\t\t\twindow.Alpine.initTree(oldContainer);\r\n\t\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t\t}\r\n\t\t\t\t\t\t});\r\n\t\t\t\t}\r\n\t\t\t};\r\n\t\t\t\r\n\t\t\teventSource.onerror = function() {\r\n\t\t\t\tconsole.log('SSE connection lost, reconnecting...');\r\n\t\t\t};\r\n\t\t});\r\n\t</script></head><body class=\"min-h-screen bg-white\"><div class=\"max-w-lg mx-auto py-12 px-4\"><!-- Header --><div class=\"text-center mb-8\"><h1 class=\"text-4xl font-bold text-black mb-2\">🐐 GOAT Todo</h1><p class=\"text-black/60 text-sm\">Get things done, like a GOAT!</p></div><!-- Main Card -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,7 +100,7 @@ func TodoContainer(todos []domain.Todo) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(countDone(todos)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 110, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 141, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -113,7 +113,7 @@ func TodoContainer(todos []domain.Todo) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(len(todos)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 110, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 141, Col: 68}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -160,7 +160,7 @@ func TodoItem(todo domain.Todo) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("todo-" + strconv.Itoa(todo.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 119, Col: 38}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 150, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -173,7 +173,7 @@ func TodoItem(todo domain.Todo) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("{ done: " + strconv.FormatBool(todo.Done) + ", deleting: false }")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 120, Col: 77}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 151, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +186,7 @@ func TodoItem(todo domain.Todo) templ.Component {
 		var templ_7745c5c3_Var8 templ.SafeURL
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs("/todos/" + strconv.Itoa(todo.ID) + "/toggle")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 132, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 163, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +199,7 @@ func TodoItem(todo domain.Todo) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(todo.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 149, Col: 15}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 180, Col: 15}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -212,7 +212,7 @@ func TodoItem(todo domain.Todo) templ.Component {
 		var templ_7745c5c3_Var10 templ.SafeURL
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs("/todos/" + strconv.Itoa(todo.ID) + "/delete")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 157, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/handler/templates/index.templ`, Line: 188, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {

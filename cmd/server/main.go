@@ -25,8 +25,11 @@ func main() {
 	// Application layer - services
 	todoService := app.NewTodoService(repo)
 
+	// Infrastructure layer - event hub for SSE
+	eventHub := infra.NewEventHub()
+
 	// Interface layer - handlers
-	todoHandler := handler.NewTodoHandler(todoService)
+	todoHandler := handler.NewTodoHandler(todoService, eventHub)
 
 	// Wire routes
 	mux := http.NewServeMux()
